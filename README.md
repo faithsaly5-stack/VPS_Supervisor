@@ -1,28 +1,45 @@
-# Master VPS Supervisor - Pro Edition 🚀
+# دستیار هوشمند مدیریت سرور (VPS Supervisor) 🚀
 
-An incredibly powerful, AI-driven Linux VPS Administration Console powered by Google Gemini 3.1 Flash. Features a stunning glassmorphism Web Dashboard with native Farsi (RTL) support.
+این برنامه یک پنل مدیریت فوق‌العاده قدرتمند برای سرورهای لینوکس (VPS) است که از هوش مصنوعی گوگل (Gemini) قدرت می‌گیرد. این برنامه دارای یک داشبورد وب بسیار زیبا و مدرن است و به طور کامل از زبان فارسی پشتیبانی می‌کند. 
 
-## ✨ Features
-- **Conversational AI Admin**: Chat with your server. Ask for status, explain configurations, or request architectural changes.
-- **Auto-Execution**: The AI proposes exact bash commands and safely queues them for your approval before execution over SSH.
-- **Neural Memory**: Uses a sophisticated sliding-window memory algorithm to maintain short-term context, automatically extracting and compressing permanent infrastructure facts into a Long-Term Knowledge Base.
-- **Failover APIs**: Provide a comma-separated list of Gemini API keys. If one fails (e.g. rate limit or 403), the engine instantly fails over to the next key.
-- **Native Farsi Support**: Fully localized to Farsi with proper Right-To-Left UI mechanics.
+با این ابزار، نیازی نیست کدهای پیچیده لینوکس را حفظ باشید؛ فقط کافی است به زبان ساده (فارسی) به دستیار بگویید چه می‌خواهید تا آن را برای شما انجام دهد!
 
-## 🛠 Installation & Setup
+## ✨ امکانات و ویژگی‌ها
 
-1. **Clone the Repository**
-2. **Install Requirements**:
-   Ensure you have Python 3 installed.
+- **مدیریت از طریق چت (هوش مصنوعی)**: با سرور خود چت کنید! وضعیت سرور را بپرسید، بخواهید برنامه‌ای نصب کند، و یا مشکلات سیستم را بررسی و رفع کند.
+- **اجرای خودکار و امن دستورات**: هوش مصنوعی کدهای لازم را می‌نویسد و قبل از اجرا روی سرور، آنها را برای تایید به شما نمایش می‌دهد. با کلیک روی یک دکمه، کد به طور امن اجرا می‌شود.
+- **حافظه هوشمند**: دستیار ما دارای حافظه کوتاه مدت و بلند مدت است. او مشخصات سرور شما و کارهایی که قبلاً انجام داده‌اید را به خاطر می‌سپارد تا در مکالمات بعدی بهتر و دقیق‌تر عمل کند.
+- **پشتیبانی کامل از زبان فارسی**: تمامی بخش‌های رابط کاربری، چت‌ها و پیام‌ها به زبان فارسی و استاندارد راست‌چین (RTL) طراحی شده‌اند.
+- **پایداری بالا با کلیدهای API پشتیبان**: می‌توانید چندین کلید API وارد کنید تا در صورتی که یکی از کلیدهای هوش مصنوعی مسدود شد (یا با محدودیت روبرو شد)، برنامه به طور خودکار از کلید بعدی استفاده کند و کار شما متوقف نشود.
+
+## 🛠 آموزش نصب و استفاده (برای کاربران عادی)
+
+استفاده از این برنامه بسیار ساده است و نیازی به دانش فنی بالا یا برنامه‌نویسی ندارد. فقط این مراحل ساده را دنبال کنید:
+
+### مرحله اول: نصب پیش‌نیازها
+۱. **نصب پایتون (Python)**: مطمئن شوید پایتون روی سیستم (ویندوز) شما نصب است.
+۲. با باز کردن خط فرمان (CMD) در پوشه برنامه، دستور زیر را تایپ کنید تا ابزارهای لازم نصب شوند:
    ```bash
    pip install -r requirements.txt
    ```
-3. **Run the Dashboard**:
-   Simply double-click the `Run_Dashboard.bat` file! 
-   This will automatically bypass execution policies, start the Flask backend, and open your browser.
 
-## 🔒 Security & Privacy (The Setup Wizard)
-All sensitive data (VPS IPs, passwords, and API Keys) is strictly isolated and **NEVER** hardcoded. 
-If the application does not find an `.env` file on launch, it will present a beautiful GUI **Setup Wizard** in your browser, asking for your credentials and safely generating the `.env` file locally. 
+### مرحله دوم: اجرای داشبورد وب
+کافی است روی فایل **`Run_Dashboard.bat`** دو بار کلیک کنید! 
+این فایل به طور خودکار پشت‌صحنه را راه‌اندازی کرده و محیط کاربری را در مرورگر شما باز می‌کند.
 
-Because of `.gitignore`, your `.env` and `.ai_memory.json` files will never be uploaded to GitHub.
+### مرحله سوم: راه‌اندازی اولیه (ویزارد تنظیمات)
+دفعه اولی که برنامه را در مرورگر باز می‌کنید، صفحه تنظیمات نمایش داده می‌شود. در این صفحه اطلاعات زیر را وارد کنید:
+- **IP سرور**: آدرس آی‌پی سرور لینوکسی شما (VPS).
+- **نام کاربری و رمز عبور (SSH)**: اطلاعات ورود به سرور.
+- **کلیدهای API گوگل (Gemini)**: برای اتصال به هوش مصنوعی.
+
+## 🔒 امنیت و حریم خصوصی
+شاید نگران امنیت رمزهای خود باشید. **هیچ جای نگرانی نیست!**
+تمامی اطلاعات حساسی که در مرحله راه‌اندازی وارد می‌کنید (رمزهای سرور و کلیدهای هوش مصنوعی) **فقط و فقط در سیستم شخصی خودتان** در فایلی مخفی به نام `.env` ذخیره می‌شود. 
+سیستم ما طوری طراحی شده است که این فایل هرگز در اینترنت، گیت‌هاب، یا جای دیگری آپلود نمی‌شود و دسترسی به سرور شما کاملاً امن باقی می‌ماند.
+
+## 📦 نحوه اشتراک‌گذاری پروژه (برای توسعه‌دهندگان)
+اگر تغییری در برنامه داده‌اید و می‌خواهید نسخه جدیدی را بدون اطلاعات شخصی خود به اشتراک بگذارید، کافی است روی فایل **`Export_Release.bat`** کلیک کنید. این اسکریپت تمام فایل‌های اضافی و اطلاعات شخصی شما را حذف کرده و یک فایل فشرده (`.zip`) تمیز از سورس برنامه در دسکتاپ شما ایجاد می‌کند که کاملاً آماده اشتراک‌گذاری است.
+
+---
+**با دستیار هوشمند، مدیریت سرور را لذت‌بخش‌تر و آسان‌تر از همیشه تجربه کنید!** 🌟

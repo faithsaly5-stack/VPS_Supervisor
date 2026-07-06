@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیر ارشد سرور مجازی - نسخه پرو</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Vazirmatn:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+    <!-- Setup Wizard Modal -->
+    <div id="setup-wizard" class="modal hidden">
+        <div class="modal-content glass">
+            <h2>به مدیر سرور مجازی خوش آمدید</h2>
+            <p>لطفاً اطلاعات سرور خود را برای پیکربندی وارد کنید.</p>
+            <div class="input-group">
+                <label>آدرس IP سرور مجازی</label>
+                <input type="text" id="setup-ip" placeholder="مثال: 123.45.67.89" dir="ltr">
+            </div>
+            <div class="input-group">
+                <label>نام کاربری سرور</label>
+                <input type="text" id="setup-user" value="root" dir="ltr">
+            </div>
+            <div class="input-group">
+                <label>رمز عبور سرور</label>
+                <input type="password" id="setup-pass" dir="ltr">
+            </div>
+            <div class="input-group">
+                <label>کلیدهای API جمینای (با کاما جدا کنید)</label>
+                <input type="text" id="setup-keys" dir="ltr">
+            </div>
+            <button id="save-setup-btn" class="btn primary w-full">ذخیره و ورود</button>
+        </div>
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div id="app-container" class="hidden">
+        <header class="glass-header">
+            <div class="header-content">
+                <h1>کنسول مدیریت سرور مجازی</h1>
+                <div class="header-actions">
+                    <button id="view-memory-btn" class="btn success" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-left: 1rem;">🧠 بازرس حافظه</button>
+                    <span class="status"><span class="dot"></span> آنلاین</span>
+                </div>
+            </div>
+        </header>
+
+        <main id="chat-container">
+            <div id="messages">
+                <div class="message system" dir="auto">
+                    <div class="bubble">به کنسول مدیریتی پیشرفته خوش آمدید. چگونه می‌توانم در مدیریت سرور مجازی به شما کمک کنم؟</div>
+                </div>
+            </div>
+        </main>
+
+        <div id="approval-modal" class="modal hidden">
+            <div class="modal-content glass">
+                <h2>تأیید اجرای دستور</h2>
+                <p>هوش مصنوعی دستور زیر را برای اجرا پیشنهاد می‌دهد:</p>
+                <code id="proposed-command" dir="ltr"></code>
+                <div class="actions">
+                    <button id="approve-btn" class="btn success">اجرا کن</button>
+                    <button id="reject-btn" class="btn danger">لغو</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="memory-modal" class="modal hidden">
+            <div class="modal-content glass" style="max-width: 800px; max-height: 85vh; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2>بازرس حافظه عصبی</h2>
+                    <button id="close-memory-btn" class="btn danger" style="padding: 0.3rem 0.8rem;">بستن</button>
+                </div>
+                
+                <h3 style="margin-top: 1rem; color: var(--primary);">پایگاه دانش بلندمدت</h3>
+                <p style="font-size: 0.8rem; margin-bottom: 0.5rem;">اطلاعات پایداری که در طول زمان استخراج و فشرده شده‌اند.</p>
+                <div id="long-memory-view" style="background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 0.5rem; white-space: pre-wrap; font-family: monospace; font-size: 0.9rem; margin-bottom: 2rem;" dir="ltr">در حال بارگذاری...</div>
+
+                <h3 style="color: var(--success);">پنجره زمینه کوتاه‌مدت (آیتم <span id="short-memory-count">0</span>)</h3>
+                <p style="font-size: 0.8rem; margin-bottom: 0.5rem;">مکالمات اخیری که در انتظار فشرده‌سازی هستند.</p>
+                <div id="short-memory-view" style="background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; font-size: 0.85rem;" dir="ltr">در حال بارگذاری...</div>
+            </div>
+        </div>
+
+        <footer class="glass-footer">
+            <div class="input-area">
+                <textarea id="user-input" placeholder="دستور خود را به فارسی یا انگلیسی تایپ کنید..." rows="1" dir="auto"></textarea>
+                <button id="send-btn" class="btn primary">ارسال</button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

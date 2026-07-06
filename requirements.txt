@@ -1,0 +1,5 @@
+paramiko==3.4.0
+click==8.1.7
+rich==13.7.1
+google-genai==0.3.0
+flask

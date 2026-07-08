@@ -175,14 +175,31 @@ def execute_and_verify(command_to_run, user_msg, explanation=""):
 
 def check_compaction():
     config = load_config()
-    threshold = int(config.get("MEMORY_COMPACTION_THRESHOLD", 80))
-    chunk_size = int(config.get("MEMORY_COMPACTION_CHUNK", 20))
+    threshold = int(config.get("MEMORY_COMPACTION_CHAR_THRESHOLD", 15000))
     
     memory = load_memory()
-    if len(memory) < threshold:
+    total_chars = sum(len(msg.get("text", "")) for msg in memory)
+    
+    if total_chars < threshold:
         return
         
-    messages_to_compact = memory[:chunk_size]
+    target_chars = threshold // 2
+    chars_to_remove = total_chars - target_chars
+    
+    messages_to_compact = []
+    removed_chars = 0
+    chunk_size = 0
+    
+    for msg in memory:
+        messages_to_compact.append(msg)
+        removed_chars += len(msg.get("text", ""))
+        chunk_size += 1
+        if removed_chars >= chars_to_remove:
+            break
+            
+    if not messages_to_compact:
+        return
+        
     api_keys = get_api_keys()
     if not api_keys:
         return

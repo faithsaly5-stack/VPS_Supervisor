@@ -1,24 +1,16 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import os
 from ai_core import load_memory, generate_command, execute_and_verify, add_to_memory
+from config import load_config, save_config
 
 app = Flask(__name__)
 
 def is_env_valid():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    env_path = os.path.join(script_dir, ".env")
-    if not os.path.exists(env_path):
+    try:
+        config = load_config()
+        return all(config.get(k) for k in ["VPS_IP", "VPS_USER", "VPS_PASS", "GEMINI_API_KEYS"])
+    except Exception:
         return False
-        
-    config = {"VPS_IP": None, "VPS_USER": None, "VPS_PASS": None, "GEMINI_API_KEYS": None}
-    with open(env_path, "r", encoding="utf-8-sig") as f:
-        for line in f:
-            if "=" in line:
-                key, val = line.strip().split("=", 1)
-                if key in config:
-                    config[key] = val
-                    
-    return all(config.values())
 
 @app.route("/")
 def index():
@@ -31,13 +23,13 @@ def check_env():
 @app.route("/api/setup", methods=["POST"])
 def setup():
     data = request.json
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    env_path = os.path.join(script_dir, ".env")
-    with open(env_path, "w") as f:
-        f.write(f"VPS_IP={data.get('ip', '')}\n")
-        f.write(f"VPS_USER={data.get('user', 'root')}\n")
-        f.write(f"VPS_PASS={data.get('password', '')}\n")
-        f.write(f"GEMINI_API_KEYS={data.get('api_keys', '')}\n")
+    config = {
+        "VPS_IP": data.get('ip', ''),
+        "VPS_USER": data.get('user', 'root'),
+        "VPS_PASS": data.get('password', ''),
+        "GEMINI_API_KEYS": data.get('api_keys', '')
+    }
+    save_config(config)
     return jsonify({"success": True})
 
 @app.route("/api/history")

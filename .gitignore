@@ -4,3 +4,4 @@ __pycache__/
 .agents/
 .ai_memory.json
 .ai_long_memory.txt
+.secret.key

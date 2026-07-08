@@ -173,3 +173,18 @@ document.addEventListener("DOMContentLoaded", () => {
     closeMemoryBtn.addEventListener("click", () => {
         memoryModal.classList.add("hidden");
     });
+    
+    const shutdownBtn = document.getElementById("shutdown-btn");
+    if (shutdownBtn) {
+        shutdownBtn.addEventListener("click", () => {
+            if (confirm("آیا مطمئن هستید که می‌خواهید ارتباط را قطع و سرور را خاموش کنید؟")) {
+                fetch("/api/shutdown", { method: "POST" })
+                    .then(() => {
+                        document.body.innerHTML = "<div style='text-align: center; margin-top: 20%; color: white; font-family: Tahoma;'><h2>ارتباط با موفقیت قطع شد</h2><p>می‌توانید این پنجره را ببندید.</p></div>";
+                    })
+                    .catch(() => {
+                        document.body.innerHTML = "<div style='text-align: center; margin-top: 20%; color: white; font-family: Tahoma;'><h2>ارتباط با موفقیت قطع شد</h2><p>می‌توانید این پنجره را ببندید.</p></div>";
+                    });
+            }
+        });
+    }

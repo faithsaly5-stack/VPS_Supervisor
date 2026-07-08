@@ -90,5 +90,13 @@ def execute():
     res = execute_and_verify(command, user_msg, explanation)
     return jsonify(res)
 
+@app.route("/api/shutdown", methods=["POST"])
+def shutdown():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        os._exit(0)
+    func()
+    return jsonify({"success": True})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)

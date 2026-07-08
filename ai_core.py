@@ -1,44 +1,57 @@
 import os
 import json
 import random
+import threading
 from ssh_client import SSHClient
 from config import load_config
 from google import genai
 from google.genai import types
 
+memory_lock = threading.Lock()
+
 def load_memory():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     mem_path = os.path.join(script_dir, ".ai_memory.json")
-    if os.path.exists(mem_path):
-        try:
-            with open(mem_path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            return []
-    return []
+    with memory_lock:
+        if os.path.exists(mem_path):
+            try:
+                with open(mem_path, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                return []
+        return []
 
 def save_memory(memory):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     mem_path = os.path.join(script_dir, ".ai_memory.json")
-    with open(mem_path, "w", encoding="utf-8") as f:
-        json.dump(memory, f, indent=4, ensure_ascii=False)
+    with memory_lock:
+        with open(mem_path, "w", encoding="utf-8") as f:
+            json.dump(memory, f, indent=4, ensure_ascii=False)
 
 def load_long_memory():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     mem_path = os.path.join(script_dir, ".ai_long_memory.txt")
-    if os.path.exists(mem_path):
-        try:
-            with open(mem_path, "r", encoding="utf-8") as f:
-                return f.read().strip()
-        except Exception:
-            return ""
-    return ""
+    with memory_lock:
+        if os.path.exists(mem_path):
+            try:
+                with open(mem_path, "r", encoding="utf-8") as f:
+                    return f.read().strip()
+            except Exception:
+                return ""
+        return ""
 
 def save_long_memory(text):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     mem_path = os.path.join(script_dir, ".ai_long_memory.txt")
-    with open(mem_path, "w", encoding="utf-8") as f:
-        f.write(text)
+    with memory_lock:
+        with open(mem_path, "w", encoding="utf-8") as f:
+            f.write(text)
+
+def add_to_memory(user_msg, ai_response):
+    memory = load_memory()
+    memory.append({"role": "user", "text": user_msg})
+    memory.append({"role": "model", "text": ai_response})
+    save_memory(memory)
 
 def get_api_keys():
     config = load_config()
@@ -114,7 +127,7 @@ Output ONLY valid JSON. Do not wrap it in markdown formatting like ```json.
             
     return {"error": last_error}
 
-def execute_and_verify(command_to_run, user_msg):
+def execute_and_verify(command_to_run, user_msg, explanation=""):
     config = load_config()
     client = SSHClient(hostname=config.get("VPS_IP"), username=config.get("VPS_USER"))
     client.connect(password=config.get("VPS_PASS"))
@@ -123,7 +136,9 @@ def execute_and_verify(command_to_run, user_msg):
     
     memory = load_memory()
     memory.append({"role": "user", "text": user_msg})
-    memory.append({"role": "model", "text": command_to_run})
+    
+    ai_context = f"Explanation: {explanation}\nCommand: {command_to_run}" if explanation else command_to_run
+    memory.append({"role": "model", "text": ai_context})
     
     verify_input = f"Command Executed: {command_to_run}\\nExit Code: {code}\\nStdout: {out}\\nStderr: {err}"
     memory.append({"role": "user", "text": f"Execution Result: {verify_input}"})
@@ -193,7 +208,8 @@ def check_compaction():
                     new_long_memory = new_long_memory.rsplit("\n", 1)[0]
                     
                 save_long_memory(new_long_memory.strip())
-                save_memory(memory[chunk_size:])
+                current_memory = load_memory()
+                save_memory(current_memory[chunk_size:])
             break
         except Exception:
             continue

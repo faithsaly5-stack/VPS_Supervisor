@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import os
-from ai_core import load_memory, generate_command, execute_and_verify
+from ai_core import load_memory, generate_command, execute_and_verify, add_to_memory
 
 app = Flask(__name__)
 
@@ -63,6 +63,7 @@ def chat():
         return jsonify({"error": res["error"]})
         
     if not res.get("command"):
+        add_to_memory(user_input, res.get("explanation", ""))
         return jsonify({
             "type": "message",
             "explanation": res.get("explanation", ""),
@@ -85,7 +86,8 @@ def execute():
     if not command or not user_msg:
         return jsonify({"error": "Missing command or user message"})
         
-    res = execute_and_verify(command, user_msg)
+    explanation = data.get("explanation", "")
+    res = execute_and_verify(command, user_msg, explanation)
     return jsonify(res)
 
 if __name__ == "__main__":

@@ -33,7 +33,8 @@ class SSHClient:
                 port=self.port,
                 username=self.username,
                 password=password,
-                timeout=10
+                timeout=30,
+                banner_timeout=30
             )
             self._connected = True
         except paramiko.AuthenticationException:
@@ -50,7 +51,8 @@ class SSHClient:
                     port=self.port,
                     username=self.username,
                     password=transient_password,
-                    timeout=10
+                    timeout=30,
+                    banner_timeout=30
                 )
                 self._connected = True
             except paramiko.AuthenticationException:
